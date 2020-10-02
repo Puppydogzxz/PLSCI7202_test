@@ -1,0 +1,246 @@
+---
+title: "Homework 2 - Descriptive Statistics"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+# Do not change anything in this code chunk
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+```
+
+----
+
+# NAME: Brittany Cook 
+# NETID: bsc95 
+**DUE DATE: September 21, 2020 by 11:59pm **  
+
+----
+
+
+## **Homework 2 Instructions **
+ 
+1.  In this homework we will explore the `StudentSurvey` data described below.  For each problem:
+
+    a)  Answer all questions
+    
+    b)  Insert code chunks directly under any problems that require you to use R and type in code as needed.  In particular, make sure code chunks are included for any requested plots.
+    
+    c) Answer any questions related to the problem in the .Rmd document directly under the question. If the answer is required in text form (rather than code) then please type it normally and not inside a code chunk.
+    
+    d) Note: Occasionally when you insert a code chunk it may not go where you intend it to.  If this happens, you can cut and paste it into the correct spot.  Make sure the code chunk is aligned to the left margin of this document.  Often it may be easier to just store a code chunk on your clip board and paste it in when you need one.
+    
+    e) You may need to knit your document occasionally to answer questions related to R output.
+    
+    f) For a multi-paragraph answer press Enter twice to properly start the next paragraph. Paragraphs seperated by just one Enter in the Rmd file shows up in the same line in the knitted output.
+  
+2. Submit two documents:  a R Markdown file and a pdf.  These files should be named "*LastF*-HW2.Rmd" and "*LastF*-HW2.pdf".
+
+
+## SurveyData
+
+An in-class survey was given to 362 introductory statistics students over several years. The StudentSurvey data contains 17 variables recorded for each student.  They are as follows:
+
+*Year*: Year in school: FirstYear, Sophomore, Junior, or Senior
+
+*Gender*: M or F
+
+*Smoke*: "No" or "Yes"
+
+*Award*: Preferred award: Academy, Nobel or Olympic
+
+*HigherSAT*: Which SAT score was higher: Math or Verbal
+
+*Exercise*: Hours of exercise per week
+
+*TV*: Hours of TV viewing per week
+
+*Height*: Height in inches
+
+*Weight*: Weight in pounds
+
+*Siblings*: Number of Siblings
+
+*BirthOrder*: Birth order: 1=oldest, 2=second oldest, etc.
+
+*VerbalSAT*: Verbal SAT score
+
+*MathSAT*: Math SAT score
+
+*SAT*: Combined Verbal + Math SAT
+
+*GPA*: College GPA
+
+*Pulse*: Pulse Rate (beats per minute)
+
+*Piercings*: Number of body piercings
+
+The **StudentSurvey** data can be downloaded from the folder for homework 2 on Canvas.  Put this data set in your folder for homework 2.
+
+To read these data into your R Console:
+
+  i. In the menu for RStudio above, select *File->Import Dataset->From Text (base)...* (depending on the version of RStudio you are using, you may need to select *Tools->Import Dataset->From Text File...*).
+    
+  ii. Navigate to the correct file in your folder for homework 2.
+    
+  iii. Click on the StudentSurvey file and choose *Open*. 
+    
+  iv. A window will pop up where you can preview the data set and possibly choose different options for downloading this data.  For this data set, the defaults are appropriate.  Click once on *Import* to read the data into the R Console.
+    
+You now should see this data listed in the "Environment" window in the upper right corner of RStudio.
+ 
+### Problem 1
+ 
+To read the data into this R Markdown document, we will use the `read.csv()` function in R. Fortunately, this function was just used in the R Console. [Some versions of RStudio may use the function `read_csv()` from the library `readr`.] 
+
+  a) Create a code chunk here.  Copy the code from the R console that starts with `StudentSurvey<-read.csv` (or `StudentSurvey<-read_csv`) and paste it into this code chunk.
+
+```{r}
+StudentSurvey <- read.csv("~/BTRY6010/HW2/StudentSurvey.txt")
+names(StudentSurvey)
+dim(StudentSurvey)
+
+```
+
+
+  b) In the code chunk above also include code to do the following:
+    
+      i. list the variable names
+      ii. get the dimension of the data
+
+  c) Suppose the population of interest is all college students. What would you call the sampling method used for this study?  How does this affect the interpretation of any analysis performed on these data?
+
+The sample method is simple random sampling (SRS). When a sample is selected by SRS, the difference between the sample the entire population is assumed to be very little.
+
+
+  d) List the variable types of the following (be as specific as possible!):
+    
+        1. TV
+        
+        Numerical, continuous
+        
+        2. Award
+        
+        Categorical, nominal
+        
+        3. Birth Order
+        
+        Numerical, discrete
+        
+        4. Pulse
+        
+        Numerical, continuous
+        
+        5. GPA
+       
+        Numerical, continuous
+
+        6. Piercings
+        
+        Numerical, discrete
+
+        
+### Problem 2
+
+One of the questions asked on the `StudentSurvey` was, "Which award would you prefer to win: an Academy Award, a Nobel Prize, or an Olympic gold medal?"
+
+  a) Which award was most popular amongst students?  Create a table of counts for `Award` with R's `table()` function.
+  
+```{r}
+table(StudentSurvey$Award)
+```
+  
+  
+  b) Was the proportion of students preferring each award different for women and men? Explain.  Complete the following steps to answer this question.
+      i. Create a relative frequency bar chart for `Award` by `Gender`. The proportions of the preferred awards for each gender should sum to 1.  You may get the necessary counts using the `table()` function in R, but it may take more than 1 step.  Do all calculations necessary in the code chunk.
+      ii. Title this chart "Award by Gender"
+      iii. The bars for Males and Females should be side by side
+      iv. Include a legend for gender using "F" and "M" as the labels
+      v. Make the bars vertical
+     vi. Set `ylim=c(0, 0.6)`
+    vii. Include the option, `args.legend = list(x="topleft")`
+    viii. Don't forget to answer the question!
+    
+```{r}
+awardbygen <- table(StudentSurvey$Gender, StudentSurvey$Award)/nrow(StudentSurvey)
+awardbygen
+
+barplot(awardbygen, ylim=c(0, 0.6),
+        args.legend = list(x="topleft"),
+        legend.text = c('M', 'F'),
+        beside = TRUE,
+        col = c('light blue', 'pink'),
+        main = 'Award by Gender')
+```
+
+Yes, the proportion was different. More men preferred academy awards, more women preferred Olympic awards, while men slightly favored nobel awards.
+  
+    
+### Problem 3
+
+Another variable recorded for the `StudentSurvey` is college GPA.  Here we will look at the relationship between college GPA and `Award`.
+
+  a) First, create a probability histogram of `GPA`, set `breaks=50`.
+  
+```{r}
+hist(StudentSurvey$GPA, breaks = 50)
+```
+  
+  i. How would you describe the distribution of GPA?
+      
+      Non-uniform.
+      
+  ii. Based on the histogram alone, estimate the range of the most common GPA values.
+      
+      2.75 to 3.75
+      
+  b) Create boxplots for `GPA` separated by `Award`.
+
+```{r}
+boxplot(StudentSurvey$GPA ~ StudentSurvey$Award)
+```
+  
+i. Do there appear to be any differences between the median GPAs of the three groups?  Support your answer using information from the plots.
+      
+  Yes, students who preferred olympic awards had a lower median GPA than students who preferred academy and nobel awards.
+      
+ii.  One group has a student whose GPA is different from the others.  Which group does he/she belong to?  What is the statistical term for this observation?
+
+  She belongs to the nobel group. The term is called an outlier.
+
+### Problem 4
+
+Yet another variable collected by the student survey was `Exercise`.  This variable recorded the number of hours each student exercised per week.  Here we will look at the relationship between `Exercise` and `Award`.
+
+  a) Use the function `hist` to create a histogram of the number of hours of exercise per week for Sophomores.  Be sure to customize the plot so that it is clear what it is conveying (e.g., label the axes to convey what is being shown) and perhaps adjust the argument `breaks` manually (recall that `?hist` will give you information about the arguments).   How would you describe the distribution of `Exercise` for the Sophomore students?
+
+```{r}
+soph <- subset(StudentSurvey, Year == "Sophomore")
+
+hist(soph$Exercise,
+     breaks = 20,
+     main = 'Number of Hours Exercised in Sophmores',
+     xlab = 'Hours')
+```
+  
+  The data is right skewed.
+    
+    
+  b) Use the `summary` function to get summary statistics for `Exercise`.  What was the range of `Exercise`?  If a student exercised more hours per week than half of the sample, what is the least amount of exercise he/she was getting per week?
+  
+```{r}
+summary(StudentSurvey$Exercise)
+```
+  The range of exercise was 0 to 40 hours per week. If a student exercised for more hours per week than half of the sample, they are exercising at least 8 hours per week.
+
+  c) Create boxplots of `Exercise` by `Award`.  What can be said about the distribution of `Exercise` for the students who preferred to win an Olympic gold medal in comparison to the distribution of `Exercise` for those who chose an Academy Award or a Nobel Prize?
+    
+```{r}
+boxplot(StudentSurvey$Exercise ~ StudentSurvey$Award)
+```   
+  
+  Students who preferred to win an olympic gold medal tended to exercise more hours than those who preferred academy and nobel awards. Their distribution was higher.
